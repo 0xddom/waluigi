@@ -1,6 +1,6 @@
 # Waluigi
 
-With the power of pycall and a some metaprogramming magic is possible to facade a ruby class into a luigi task. Not everything works, but looks promising.
+With the power of pycall and some metaprogramming magic is possible to facade a ruby class into a luigi task. Not everything works, but looks promising.
 
 ## What works
 
