@@ -12,3 +12,4 @@ With the power of pycall and some metaprogramming magic is possible to facade a 
 
 - Parameters declaration in Ruby
 - Getting information from the Python side (output(), input(), parameters, etc)
+
