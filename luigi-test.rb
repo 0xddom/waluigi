@@ -11,12 +11,17 @@ end
 class MyTask
 	include Waluigi::Task
 
+	parameter :msg, default: "Running a waluigi task"
+
 	requires MyOtherTask.build
 	output luigi.LocalTarget.new './testfile'
 
 	def run
 		puts "-" * 50
-		puts "Running a waluigi task"
+		puts "Message: #{msg}"
+		f = output.open 'w'
+		f.write msg
+		f.close
 		puts "-" * 50
 	end
 end

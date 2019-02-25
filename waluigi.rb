@@ -5,7 +5,7 @@ pyimport :sys
 sys.path << '.'
 
 module Waluigi
-	@@tasks ||= []
+	@@tasks = []
 
 	def self.run(*args)
 		@@tasks.each { |task| Waluigi.register_facade task }
@@ -14,20 +14,36 @@ module Waluigi
 		luigi.run(args)
 	end
 
+	module TaskHelper
+		def output
+			@python_obj.output
+		end
+
+		def input
+			@python_obj.input
+		end
+
+		def method_missing(m, *_args, **_kwargs, &_block)
+			@python_obj.send m	
+		end
+	end
+
 	module Task
 		def self.included(task)
 			Waluigi.register_task task
 			task.instance_variable_set :@ctx, HelperCtx.new
 			m = Waluigi.create_helper_module
 			task.extend m
+			task.send :include, TaskHelper
 		end
 	end
 
 	class HelperCtx
-		attr_reader :outputs, :requirements, :luigi
+		attr_reader :outputs, :requirements, :luigi, :parameters
 		def initialize
 			@outputs = []
 			@requirements = []
+			@parameters = []
 			@luigi = PyCall.import_module 'luigi'
 		end
 	end
@@ -45,6 +61,16 @@ module Waluigi
 		end
 	end
 
+	class RubyTaskParameter
+		attr_reader :name, :type, :kwargs
+
+		def initialize(name, type, kwargs)
+			@name = name
+			@type = type
+			@kwargs = kwargs
+		end
+	end
+
 	private 
 	def self.create_helper_module
 		Module.new do
@@ -58,6 +84,22 @@ module Waluigi
 
 			def defined_outputs
 				@ctx.outputs
+			end
+
+			def parameter(name, type:nil, **kwargs)
+				@ctx.parameters << RubyTaskParameter.new(name, type, kwargs)
+			end
+
+			def defined_parameters
+				pyimport :luigi
+				@ctx.parameters.map do |param|
+					if param.is_a? RubyTaskParameter
+						t = if param.type then param.type else luigi.Parameter end
+						[param.name, t.new(**param.kwargs)]
+					else
+						param
+					end
+				end
 			end
 
 			def defined_requirements
