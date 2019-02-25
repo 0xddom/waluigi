@@ -1,3 +1,7 @@
 __pycache__
 *.gem
 .DS_Store
+testfile
+build
+dist
+*.egg-info

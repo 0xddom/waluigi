@@ -5,6 +5,8 @@ module Waluigi
 		WaluigiFacade = PyCall.import_module('waluigi_facade')
 	end
 
+	require 'singleton'
+
 	require 'waluigi/helpers'
 	require 'waluigi/task'
 	require 'waluigi/launcher'

@@ -16,7 +16,7 @@ class MyTask
 	parameter :msg, default: "Running a waluigi task"
 
 	requires MyOtherTask.build
-	output luigi.LocalTarget.new './testfile'
+	output Waluigi::Python::Luigi.LocalTarget.new './testfile'
 
 	def run
 		puts "-" * 50

@@ -31,13 +31,12 @@ module Waluigi
 		end
 
 		def defined_parameters
-			pyimport :luigi
 			@ctx.parameters.map do |param|
 				if param.is_a? RubyTaskParameter
 					t = if param.type
 						param.type 
 					else 
-						luigi.Parameter 
+						Python::Luigi.Parameter 
 					end
 					[param.name, t.new(**param.kwargs)]
 				else
