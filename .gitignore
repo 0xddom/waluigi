@@ -1,1 +1,3 @@
 __pycache__
+*.gem
+.DS_Store
